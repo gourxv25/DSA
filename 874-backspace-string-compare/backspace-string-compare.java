@@ -1,24 +1,47 @@
 class Solution {
     public boolean backspaceCompare(String s, String t) {
-        StringBuilder s1 = new StringBuilder();
-        StringBuilder t1 = new StringBuilder();
+        int i = s.length() - 1;
+        int j = t.length() - 1;
+        int skipS = 0, skipT= 0;
 
-        for(char ch : s.toCharArray()){
-            if(ch == '#'){
-                if(s1.length() > 0)   
-                    s1.deleteCharAt(s1.length()-1);
+        while( i >= 0 || j >= 0){
+            
+            // find the next valid character in S
+            while(i >= 0){
+                if(s.charAt(i) == '#'){
+                    skipS++;
+                    i--;
+                }else if(skipS > 0){
+                    skipS--;
+                    i--;
+                }else break;
             }
-            else s1.append(ch);
-        }
 
-        for(char ch : t.toCharArray()){
-            if(ch == '#'){
-                if(t1.length() > 0)   
-                    t1.deleteCharAt(t1.length()-1);
+            // find the next valid character in T
+            while(j >= 0){
+                if(t.charAt(j) == '#'){
+                    skipT++;
+                    j--;
+                } else if(skipT > 0){
+                    skipT--;
+                    j--;
+                }else break;
             }
-            else t1.append(ch);
-        }
 
-        return s1.toString().equals(t1.toString());
+             // Compare valid characters
+            if (i >= 0 && j >= 0 &&
+                s.charAt(i) != t.charAt(j)) {
+                return false;
+            }
+
+             // One string has a character, the other doesn't
+            if ((i >= 0) != (j >= 0)) {
+                return false;
+            }
+
+            i--;
+            j--;
+        }
+        return true;
     }
 }
